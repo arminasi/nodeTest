@@ -1,0 +1,17 @@
+{
+  "name": "toto",
+  "version": "1.0.0",
+  "main": "index.js",
+  "devDependencies": {},
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+	"type": "module",
+  "description": "",
+	"dependencies": {
+		"nodemon": "^2.0.19"
+  },
+  "scripts": {
+		"start": "nodemon index.js"
+  }
+}

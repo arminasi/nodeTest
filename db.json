@@ -1,0 +1,15 @@
+{
+	"todos": [
+		{
+			"id": 1,
+			"title": "SOME TEXT",
+			"isCompleted": false
+		},
+		{
+			"id": 2,
+			"title": "SOME TEXT",
+			"isCompleted": false
+		}
+	],
+	"nextTodoId": 3
+}
