@@ -1,9 +1,12 @@
-import fs from "fs";
+import fs from "fs/promises";
+
+
+const idFn = incrementId();
 
 async function readFrom(file) {
-	const data = await fs.promises.readFile(file, "utf-8");
+	const data = await fs.readFile(file, "utf-8");
 	const res = JSON.parse(data);
-	return res.todos
+	return res
 }
 
 export async function getTodosFromDb() {
@@ -18,15 +21,47 @@ export function incrementId() {
 	}
 }
 
-const incId = incrementId()
-
 export async function addTodoToDb(text) {
 	const data = await getTodosFromDb();
-	const newData = [...data, text];
-	
-	return fs.promises.writeFile("db.json", JSON.stringify({todos: newData}, "sad"))
+	const newData = {"todos": [...data.todos, text]};
+	newData.todos.forEach(item => {
+		item.id = idFn();
+	})
+	try {
+		fs.writeFile("db.json", JSON.stringify(newData))
+	} catch(err) {
+		throw err
+	}
 }
 
-export function getTodo(id) {
-	
+export async function deleteToDoById(id) {
+	const data = await getTodosFromDb();
+	const newData = data.todos.filter(item => {
+		return item.id !== id;
+	})
+	try {
+		fs.writeFile("db.json", JSON.stringify({"todos": newData}))
+	} catch(err) {
+		throw err
+	}
+}
+
+export function postNewTodo(req, res) {
+	let data = ""
+			try {
+				fs.readFile("db.json", "utf-8");
+			} catch(err) {
+				throw err;
+			}
+			req.on('data', (chunk) => {
+				data += chunk;
+			})
+			req.on('end', () => {
+				const parsed = JSON.parse(data)
+				addTodoToDb(parsed).then(data => res.end(data))
+			})
+}
+
+export function updateIsCompletedState() {
+
 }

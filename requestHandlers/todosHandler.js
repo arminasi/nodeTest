@@ -1,6 +1,4 @@
-import { getTodosFromDb, addTodoToDb, incrementId } from "../helpers.js"
-import fs from "fs";
-const id = incrementId();
+import { getTodosFromDb, deleteToDoById, postNewTodo } from "../helpers.js"
 
 export async function todosHandler(req, res) {
 	if(req.url === "" || req.url === "/") {
@@ -8,21 +6,15 @@ export async function todosHandler(req, res) {
 			const data = await getTodosFromDb();
 			res.end(JSON.stringify(data))
 		} else if(req.method === "POST") {
-			fs.readFile("db.json", "utf-8", (err, re) => {
-				if(err) {
-					throw err;
-				} else {
-					res.end(re)
-				}
-			});
-			let data = ""
-			req.on('data', (chunk) => {
-				data += chunk;
-			})
-			req.on('end', () => {
-				const parsed = JSON.parse(data)
-				addTodoToDb(parsed).then(data => res.end(data))
-			})
+			postNewTodo(req, res);
 		}
+ 	} else if(+req.url){
+		try {
+			deleteToDoById(+req.url)
+		} catch(err) {
+			throw err;
+		}
+	} else {
+		res.end("Nothing to do")
 	}
 }
