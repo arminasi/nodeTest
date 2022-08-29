@@ -1,3 +1,4 @@
+import { resolveAny } from "dns";
 import fs from "fs/promises";
 
 
@@ -24,9 +25,13 @@ export function incrementId() {
 export async function addTodoToDb(text) {
 	const data = await getTodosFromDb();
 	const newData = {"todos": [...data.todos, text]};
+
+	//bad solution;
 	newData.todos.forEach(item => {
 		item.id = idFn();
 	})
+	//...
+
 	try {
 		fs.writeFile("db.json", JSON.stringify(newData))
 	} catch(err) {
@@ -64,4 +69,13 @@ export function postNewTodo(req, res) {
 
 export function updateIsCompletedState() {
 
+}
+
+export async function getUserById(req, res, id) {
+	const data = await getTodosFromDb();
+	const current = data.todos.find(item => {
+		return item.id === id;
+	})
+	const forSend = JSON.stringify(current);
+	res.end(forSend)
 }

@@ -4,4 +4,6 @@ async function getData() {
 	return data;
 }
 
+
+
 getData().then(res => console.log(res))
