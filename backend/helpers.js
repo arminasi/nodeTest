@@ -1,4 +1,3 @@
-import { resolveAny } from "dns";
 import fs from "fs/promises";
 
 
@@ -11,7 +10,7 @@ async function readFrom(file) {
 }
 
 export async function getTodosFromDb() {
-	const data = await readFrom("db.json");
+	const data = await readFrom("backend/db.json");
 	return data;
 }
 
@@ -24,16 +23,14 @@ export function incrementId() {
 
 export async function addTodoToDb(text) {
 	const data = await getTodosFromDb();
-	const newData = {"todos": [...data.todos, text]};
-
-	//bad solution;
-	newData.todos.forEach(item => {
-		item.id = idFn();
-	})
-	//...
+	const newData = {"todos": [...data.todos, text]}.todos.reduce((acc, elem) => {
+		elem.id = idFn()
+		acc.push(elem);
+		return acc;
+	}, []);
 
 	try {
-		fs.writeFile("db.json", JSON.stringify(newData))
+		fs.writeFile("backend/db.json", JSON.stringify({"todos": newData}))
 	} catch(err) {
 		throw err
 	}
@@ -45,7 +42,7 @@ export async function deleteToDoById(id) {
 		return item.id !== id;
 	})
 	try {
-		fs.writeFile("db.json", JSON.stringify({"todos": newData}))
+		fs.writeFile("backend/db.json", JSON.stringify({"todos": newData}))
 	} catch(err) {
 		throw err
 	}
@@ -54,7 +51,7 @@ export async function deleteToDoById(id) {
 export function postNewTodo(req, res) {
 	let data = ""
 			try {
-				fs.readFile("db.json", "utf-8");
+				fs.readFile("backend/db.json", "utf-8");
 			} catch(err) {
 				throw err;
 			}

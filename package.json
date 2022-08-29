@@ -1,7 +1,7 @@
 {
   "name": "toto",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "backend/index.js",
   "devDependencies": {},
   "keywords": [],
   "author": "",
