@@ -1,0 +1,24 @@
+GET http://localhost:3000/api/v1/todos
+
+#######
+GET http://localhost:3000/api/v1/todos/2
+
+#######
+POST http://localhost:3000/api/v1/todos
+Content-Type: "application/json"
+
+{
+	"title": "NewTodo",
+	"isCompleted": false
+}
+
+#####
+DELETE http://localhost:3000/api/v1/todos/6
+
+####
+
+PUT http://localhost:3000/api/v1/todos/10
+
+{
+	"isCompleted": true
+}
